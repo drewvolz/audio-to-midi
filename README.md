@@ -104,7 +104,7 @@ You can use a MIDI pedal (such as a footswitch) to control note duration in real
 
 ## Using a Virtual MIDI Port to Connect to MuseScore or Other MIDI Software
 
-To send MIDI notes from your voice to any MIDI-compatible software (like MuseScore, GarageBand, Logic, Ableton, etc.), you need to set up a **virtual MIDI port**. This lets your app act like a MIDI keyboard for other programs.
+To send MIDI notes from your audio to any MIDI-compatible software (like MuseScore, GarageBand, Logic, Ableton, etc.), you need to set up a **virtual MIDI port**. This lets your app act like a MIDI keyboard for other programs.
 
 ### macOS: IAC Driver
 

@@ -1,4 +1,4 @@
-# Voice to MIDI - Development Commands
+# Audio to MIDI - Development Commands
 
 # Check linting (matches CI)
 lint:

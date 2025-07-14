@@ -1,5 +1,5 @@
 """
-Main entry point for the Voice to MIDI application.
+Main entry point for the Audio to MIDI application.
 
 This module provides the main entry point that handles system dependency
 checking and launches the CLI interface.
@@ -62,7 +62,7 @@ def display_dependency_error(missing_deps: list) -> None:
 
 
 def main() -> None:
-    """Main entry point for the Voice to MIDI application."""
+    """Main entry point for the Audio to MIDI application."""
     # Check system dependencies first
     missing_deps = check_system_dependencies()
     if missing_deps:

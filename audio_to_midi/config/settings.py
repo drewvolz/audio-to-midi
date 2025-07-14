@@ -1,5 +1,5 @@
 """
-Settings schema and validation for the Voice to MIDI application.
+Settings schema and validation for the Audio to MIDI application.
 
 This module defines the structure and validation rules for all configuration
 settings, providing type safety and default values.

@@ -40,7 +40,7 @@ class AudioToMidiApp:
 
     def __init__(self, config_path: Optional[str] = None) -> None:
         """
-        Initialize the Voice to MIDI application.
+        Initialize the Audio to MIDI application.
 
         Args:
             config_path: Path to configuration file (optional)
@@ -85,7 +85,7 @@ class AudioToMidiApp:
 
         # Setup logging
         setup_logging()
-        logger.info("Voice to MIDI application initialized")
+        logger.info("Audio to MIDI application initialized")
 
     def load_config(self) -> Settings:
         """
@@ -222,7 +222,7 @@ class AudioToMidiApp:
             self.is_running = True
             self._start_threads()
 
-            logger.info("Voice to MIDI application started")
+            logger.info("Audio to MIDI application started")
 
         except Exception as e:
             self.is_running = False
@@ -234,7 +234,7 @@ class AudioToMidiApp:
             logger.warning("Application is not running")
             return
 
-        logger.info("Stopping voice to MIDI application")
+        logger.info("Stopping audio to MIDI application")
         self.is_running = False
 
         # Stop all threads
@@ -247,7 +247,7 @@ class AudioToMidiApp:
         # Clean up modules
         self._cleanup_modules()
 
-        logger.info("Voice to MIDI application stopped")
+        logger.info("Audio to MIDI application stopped")
 
     def run(self) -> None:
         """

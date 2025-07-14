@@ -1,5 +1,5 @@
 """
-Utility functions and helpers for the Voice to MIDI application.
+Utility functions and helpers for the Audio to MIDI application.
 
 This module provides common utility functions used across the application
 including logging setup, validation, and mathematical helpers.

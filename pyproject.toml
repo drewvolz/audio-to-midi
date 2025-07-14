@@ -1,10 +1,8 @@
 [project]
 name = "audio-to-midi"
 version = "0.2.0"
-description = "Modular real-time voice to MIDI translation with enhanced CLI"
-authors = [
-    {name = "Voice to MIDI Translator", email = "user@example.com"}
-]
+description = "Modular real-time audio to MIDI translation with enhanced CLI"
+authors = [{ name = "Audio to MIDI Translator", email = "user@example.com" }]
 readme = "README.md"
 requires-python = ">=3.8"
 dependencies = [
@@ -83,13 +81,7 @@ show_error_codes = true
 disable_error_code = ["unreachable"]
 
 [[tool.mypy.overrides]]
-module = [
-    "pyaudio.*",
-    "librosa.*",
-    "mido.*",
-    "rtmidi.*",
-    "questionary.*",
-]
+module = ["pyaudio.*", "librosa.*", "mido.*", "rtmidi.*", "questionary.*"]
 ignore_missing_imports = true
 
 [tool.uvx]

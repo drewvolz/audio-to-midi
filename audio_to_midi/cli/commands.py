@@ -1,5 +1,5 @@
 """
-CLI commands for the Voice to MIDI application.
+CLI commands for the Audio to MIDI application.
 
 This module defines all CLI commands using Click with enhanced error handling,
 validation, and user interaction through Rich interfaces.
@@ -97,7 +97,7 @@ def _configure_advanced_settings(
 @click.option("--verbose", "-v", is_flag=True, help="Enable verbose logging")
 def cli(verbose: bool) -> None:
     """
-    🎤 Voice to MIDI Translator 🎹
+    🎤 Audio to MIDI Translator 🎹
 
     Real-time voice-to-MIDI conversion with beautiful CLI interface.
 
@@ -119,7 +119,7 @@ def cli(verbose: bool) -> None:
     level = "DEBUG" if verbose else "INFO"
     setup_logging(level)
 
-    logger.info("Voice to MIDI application starting")
+    logger.info("Audio to MIDI application starting")
 
 
 @cli.command("run")
@@ -159,7 +159,7 @@ def run_app(
     config_path: str,
 ) -> None:
     """
-    Start the Voice to MIDI application.
+    Start the Audio to MIDI application.
 
     This command starts the real-time voice-to-MIDI conversion process.
     If you have saved settings, the app will start with those settings.
@@ -217,7 +217,7 @@ def run_app(
         try:
             if choose_devices or not app.is_configured:
                 cli_interface.display_header(
-                    "Voice to MIDI Translator", "Configure your audio and MIDI devices"
+                    "Audio to MIDI Translator", "Configure your audio and MIDI devices"
                 )
 
                 # Select audio device
@@ -272,7 +272,7 @@ def run_app(
         app.on_error = on_error
 
         # Start the application
-        cli_interface.display_header("Starting Voice to MIDI Conversion")
+        cli_interface.display_header("Starting Audio to MIDI Conversion")
         cli_interface.display_info("Speak or sing into your microphone...")
 
         app.run()
@@ -339,7 +339,7 @@ def config_command(
         audio_device_manager = AudioDeviceManager()
         midi_device_manager = MidiDeviceManager()
 
-        cli_interface.display_header("Voice to MIDI Configuration")
+        cli_interface.display_header("Audio to MIDI Configuration")
 
         # Determine configuration mode
         specific_sections = any([pedal, audio, midi, pitch])
@@ -532,7 +532,7 @@ def help_command() -> None:
     Show detailed help information.
 
     This command provides comprehensive help information about using the
-    Voice to MIDI application, including examples and troubleshooting tips.
+    Audio to MIDI application, including examples and troubleshooting tips.
     """
     cli_interface = CLIInterface()
     cli_interface.display_help_panel()

@@ -1,7 +1,7 @@
 """
 CLI Interface Module
 
-This module provides the command-line interface for the Voice to MIDI application
+This module provides the command-line interface for the Audio to MIDI application
 using Click for command parsing and Rich/Questionary for enhanced user interaction.
 
 The CLI is organized into logical commands:

@@ -1,5 +1,5 @@
 """
-Voice to MIDI Translator
+Audio to MIDI Translator
 
 A modular real-time voice-to-MIDI conversion application that captures audio from
 your microphone, detects pitch, and converts it to MIDI notes.
@@ -26,7 +26,7 @@ Example:
 """
 
 __version__ = "0.2.0"
-__author__ = "Voice to MIDI Translator"
+__author__ = "Audio to MIDI Translator"
 __email__ = "user@example.com"
 
 from .core.application import AudioToMidiApp

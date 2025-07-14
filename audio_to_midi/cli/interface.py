@@ -637,7 +637,7 @@ class CLIInterface:
 
         content = "\n".join(help_content)
         panel = Panel(
-            content, title="[bold]Voice to MIDI Help[/bold]", border_style="blue"
+            content, title="[bold]Audio to MIDI Help[/bold]", border_style="blue"
         )
         self.console.print(panel)
 
