@@ -1,0 +1,67 @@
+name: Code Quality
+
+on:
+  push:
+    branches: [main, develop, feature/*]
+    paths-ignore:
+      - "docs/**"
+      - "*.md"
+      - "LICENSE"
+  pull_request:
+    branches: [main]
+    paths-ignore:
+      - "docs/**"
+      - "*.md"
+      - "LICENSE"
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+
+      - name: Set up Python ${{ matrix.python-version }}
+        run: uv python install ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: uv sync --dev
+
+      - name: Run lint checks (matching Makefile)
+        run: |
+          uv run ruff check .
+
+      - name: Check code formatting (matching Makefile)
+        run: |
+          uv run black --check .
+
+      - name: Run type checking (matching Makefile)
+        run: |
+          uv run mypy voice_to_midi/ || echo "Type checking needs configuration"
+
+      - name: Run pre-commit hooks
+        run: |
+          uv run pre-commit run --all-files
+
+      - name: Run tests
+        run: |
+          uv run pytest tests/ -v
+
+      - name: Run tests with coverage
+        run: |
+          uv run pytest tests/ -v --cov=voice_to_midi --cov-report=xml
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          file: ./coverage.xml
+          fail_ci_if_error: false

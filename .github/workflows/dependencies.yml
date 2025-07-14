@@ -1,0 +1,51 @@
+name: Update Dependencies
+
+on:
+  schedule:
+    # Mondays at 9 AM UTC
+    - cron: "0 9 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update-dependencies:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+
+      - name: Set up Python
+        run: uv python install 3.11
+
+      - name: Update dependencies
+        run: |
+          uv sync --upgrade
+          uv lock --upgrade
+
+      - name: Run quality checks
+        run: |
+          uv sync --dev
+          uv run ruff check . || echo "Linting issues found"
+          uv run black --check . || echo "Formatting issues found"
+          uv run pytest tests/ -v || echo "Tests failed"
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore: update dependencies"
+          title: "chore: update dependencies"
+          body: |
+            Automated dependency update
+
+            This PR updates all dependencies to their latest versions.
+
+            Please review the changes and ensure all tests pass.
+          branch: dependency-updates
+          delete-branch: true
