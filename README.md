@@ -24,19 +24,6 @@ This project requires some system libraries **before** installing Python depende
 brew install portaudio tcl-tk
 ```
 
-#### Ubuntu/Debian
-
-```sh
-sudo apt-get update
-sudo apt-get install portaudio19-dev tk-dev
-```
-
-#### Fedora
-
-```sh
-sudo dnf install portaudio-devel tk-devel
-```
-
 ### 2. Install and Run
 
 ```bash
