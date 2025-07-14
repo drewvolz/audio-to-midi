@@ -14,7 +14,7 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
 
-from ..core.exceptions import VoiceToMidiError
+from ..core.exceptions import AudioToMidiError
 from ..devices.audio_devices import AudioDevice
 from ..devices.midi_devices import MidiPort
 
@@ -604,7 +604,7 @@ class CLIInterface:
             f"[red]{str(error)}[/red]",
         ]
 
-        if isinstance(error, VoiceToMidiError):
+        if isinstance(error, AudioToMidiError):
             error_content.append("")
             error_content.append(
                 "[yellow]Please check your configuration and try again.[/yellow]"

@@ -11,7 +11,7 @@ The pitch detection system is optimized for vocal input with configurable
 frequency ranges, confidence thresholds, and smoothing parameters.
 
 Example:
-    >>> from voice_to_midi.pitch import PitchDetector
+    >>> from audio_to_midi.pitch import PitchDetector
     >>> detector = PitchDetector(min_freq=80, max_freq=800)
     >>> frequency, confidence = detector.detect_pitch(audio_data)
     >>> midi_note = detector.frequency_to_midi(frequency)

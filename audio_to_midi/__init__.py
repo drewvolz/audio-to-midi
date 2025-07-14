@@ -15,8 +15,8 @@ This package provides a clean, modular architecture with separated concerns:
 
 Example:
     Basic usage:
-    >>> from voice_to_midi import VoiceToMidiApp
-    >>> app = VoiceToMidiApp()
+    >>> from audio_to_midi import AudioToMidiApp
+    >>> app = AudioToMidiApp()
     >>> app.run()
 
     CLI usage:
@@ -29,12 +29,12 @@ __version__ = "0.2.0"
 __author__ = "Voice to MIDI Translator"
 __email__ = "user@example.com"
 
-from .core.application import VoiceToMidiApp
-from .core.exceptions import AudioError, ConfigError, MidiError, VoiceToMidiError
+from .core.application import AudioToMidiApp
+from .core.exceptions import AudioError, ConfigError, MidiError, AudioToMidiError
 
 __all__ = [
-    "VoiceToMidiApp",
-    "VoiceToMidiError",
+    "AudioToMidiApp",
+    "AudioToMidiError",
     "AudioError",
     "MidiError",
     "ConfigError",

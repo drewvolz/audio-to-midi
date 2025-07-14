@@ -11,7 +11,7 @@ The device management system provides a unified interface for discovering
 and selecting audio/MIDI devices across different platforms.
 
 Example:
-    >>> from voice_to_midi.devices import AudioDeviceManager, MidiDeviceManager
+    >>> from audio_to_midi.devices import AudioDeviceManager, MidiDeviceManager
     >>> audio_mgr = AudioDeviceManager()
     >>> devices = audio_mgr.list_input_devices()
     >>> midi_mgr = MidiDeviceManager()

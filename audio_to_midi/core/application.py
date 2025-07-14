@@ -1,5 +1,5 @@
 """
-Main application class for the Voice to MIDI translator.
+Main application class for Audio to MIDI conversion.
 
 This module contains the core application logic that orchestrates all other
 modules and manages the main processing pipeline.
@@ -12,15 +12,15 @@ import time
 from typing import Callable, Optional
 
 from ..config import ConfigManager, Settings
-from ..core.exceptions import AudioError, MidiError, VoiceToMidiError
+from ..core.exceptions import AudioError, MidiError, AudioToMidiError
 from ..utils.helpers import setup_logging
 
 logger = logging.getLogger(__name__)
 
 
-class VoiceToMidiApp:
+class AudioToMidiApp:
     """
-    Main application class that orchestrates the voice-to-MIDI conversion pipeline.
+    Main application class for Audio to MIDI conversion.
 
     This class manages the lifecycle of the application, coordinates between
     different modules, and provides the main API for starting/stopping the
@@ -30,7 +30,7 @@ class VoiceToMidiApp:
     to allow for easy testing and extensibility.
 
     Example:
-        >>> app = VoiceToMidiApp()
+        >>> app = AudioToMidiApp()
         >>> app.load_config()
         >>> app.configure_devices()
         >>> app.start()
@@ -95,27 +95,27 @@ class VoiceToMidiApp:
             Loaded settings
 
         Raises:
-            VoiceToMidiError: If configuration cannot be loaded
+            AudioToMidiError: If configuration cannot be loaded
         """
         try:
             self.settings = self.config_manager.load()
             logger.info("Configuration loaded successfully")
             return self.settings
         except Exception as e:
-            raise VoiceToMidiError(f"Failed to load configuration: {e}")
+            raise AudioToMidiError(f"Failed to load configuration: {e}")
 
     def save_config(self) -> None:
         """
         Save current configuration to file.
 
         Raises:
-            VoiceToMidiError: If configuration cannot be saved
+            AudioToMidiError: If configuration cannot be saved
         """
         try:
             self.config_manager.save()
             logger.info("Configuration saved successfully")
         except Exception as e:
-            raise VoiceToMidiError(f"Failed to save configuration: {e}")
+            raise AudioToMidiError(f"Failed to save configuration: {e}")
 
     def inject_dependencies(self, **modules: object) -> None:
         """
@@ -137,16 +137,16 @@ class VoiceToMidiApp:
             force_selection: Force device selection even if saved config exists
 
         Raises:
-            VoiceToMidiError: If devices cannot be configured
+            AudioToMidiError: If devices cannot be configured
         """
         if not self.settings:
-            raise VoiceToMidiError(
+            raise AudioToMidiError(
                 "Configuration must be loaded before configuring devices"
             )
         settings = self.settings  # type: ignore[assignment]
 
         if not self.audio_device_manager or not self.midi_device_manager:
-            raise VoiceToMidiError(
+            raise AudioToMidiError(
                 "Device managers must be injected before configuring devices"
             )
 
@@ -155,7 +155,7 @@ class VoiceToMidiApp:
             if force_selection or not settings.audio.input_device_name:
                 devices = self.audio_device_manager.list_input_devices()
                 if not devices:
-                    raise VoiceToMidiError("No audio input devices found")
+                    raise AudioToMidiError("No audio input devices found")
 
                 # For now, use the first device or saved device
                 if settings.audio.input_device_name:
@@ -173,7 +173,7 @@ class VoiceToMidiApp:
             if force_selection or not settings.midi.output_port_name:
                 ports = self.midi_device_manager.list_output_ports()
                 if not ports:
-                    raise VoiceToMidiError("No MIDI output ports found")
+                    raise AudioToMidiError("No MIDI output ports found")
 
                 # For now, use the first port or saved port
                 if settings.midi.output_port_name:
@@ -188,21 +188,21 @@ class VoiceToMidiApp:
                 logger.info(f"MIDI device configured: {port.name}")
 
         except Exception as e:
-            raise VoiceToMidiError(f"Failed to configure devices: {e}")
+            raise AudioToMidiError(f"Failed to configure devices: {e}")
 
     def start(self) -> None:
         """
         Start the voice-to-MIDI conversion process.
 
         Raises:
-            VoiceToMidiError: If application cannot be started
+            AudioToMidiError: If application cannot be started
         """
         if self.is_running:
             logger.warning("Application is already running")
             return
 
         if not self.settings:
-            raise VoiceToMidiError("Configuration must be loaded before starting")
+            raise AudioToMidiError("Configuration must be loaded before starting")
 
         if not all(
             [
@@ -212,7 +212,7 @@ class VoiceToMidiApp:
                 self.midi_output,
             ]
         ):
-            raise VoiceToMidiError("All modules must be injected before starting")
+            raise AudioToMidiError("All modules must be injected before starting")
 
         try:
             # Initialize modules with current settings
@@ -226,7 +226,7 @@ class VoiceToMidiApp:
 
         except Exception as e:
             self.is_running = False
-            raise VoiceToMidiError(f"Failed to start application: {e}")
+            raise AudioToMidiError(f"Failed to start application: {e}")
 
     def stop(self) -> None:
         """Stop the voice-to-MIDI conversion process."""
@@ -274,18 +274,18 @@ class VoiceToMidiApp:
     def _initialize_modules(self) -> None:
         """Initialize all modules with current settings."""
         if self.settings is None:
-            raise VoiceToMidiError(
+            raise AudioToMidiError(
                 "Configuration must be loaded before initializing modules"
             )
         settings = self.settings
         if self.audio_capture is None:
-            raise VoiceToMidiError("Audio capture module not injected")
+            raise AudioToMidiError("Audio capture module not injected")
         if self.audio_processor is None:
-            raise VoiceToMidiError("Audio processor module not injected")
+            raise AudioToMidiError("Audio processor module not injected")
         if self.pitch_detector is None:
-            raise VoiceToMidiError("Pitch detector module not injected")
+            raise AudioToMidiError("Pitch detector module not injected")
         if self.midi_output is None:
-            raise VoiceToMidiError("MIDI output module not injected")
+            raise AudioToMidiError("MIDI output module not injected")
         # Initialize audio capture
         self.audio_capture.configure(
             sample_rate=settings.audio.sample_rate,
@@ -548,7 +548,7 @@ class VoiceToMidiApp:
         from ..utils.helpers import frequency_to_midi_note
 
         if self.settings is None:
-            raise VoiceToMidiError(
+            raise AudioToMidiError(
                 "Configuration must be loaded before converting frequency to MIDI note"
             )
         return frequency_to_midi_note(frequency, self.settings.midi.transpose_semitones)

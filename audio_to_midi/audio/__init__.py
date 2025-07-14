@@ -11,7 +11,7 @@ The audio system uses PyAudio for cross-platform audio capture with
 configurable sample rates, chunk sizes, and input devices.
 
 Example:
-    >>> from voice_to_midi.audio import AudioCapture
+    >>> from audio_to_midi.audio import AudioCapture
     >>> capture = AudioCapture(sample_rate=44100, chunk_size=1024)
     >>> capture.start()
     >>> audio_data = capture.get_audio_data()

@@ -201,4 +201,4 @@ class Settings:
 
 
 # Default configuration file path
-DEFAULT_CONFIG_PATH = os.path.expanduser("~/.voice_to_midi_config.json")
+DEFAULT_CONFIG_PATH = os.path.expanduser("~/.audio_to_midi_config.json")

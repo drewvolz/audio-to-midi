@@ -15,8 +15,8 @@ from ..audio.capture import AudioCapture
 from ..audio.processor import AudioProcessor
 from ..config import ConfigManager
 from ..config.settings import Settings
-from ..core.application import VoiceToMidiApp
-from ..core.exceptions import ConfigError, VoiceToMidiError
+from ..core.application import AudioToMidiApp
+from ..core.exceptions import ConfigError, AudioToMidiError
 from ..devices.audio_devices import AudioDeviceManager
 from ..devices.midi_devices import MidiDeviceManager
 from ..midi.output import MidiOutput
@@ -175,7 +175,7 @@ def run_app(
 
     try:
         # Create and configure application
-        app = VoiceToMidiApp(config_path)
+        app = AudioToMidiApp(config_path)
 
         # Load configuration
         try:
@@ -279,7 +279,7 @@ def run_app(
 
     except KeyboardInterrupt:
         cli_interface.display_info("Application stopped by user")
-    except VoiceToMidiError as e:
+    except AudioToMidiError as e:
         cli_interface.display_error_panel(e)
         sys.exit(1)
     except Exception as e:

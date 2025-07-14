@@ -11,7 +11,7 @@ The MIDI system uses the mido library for cross-platform MIDI support
 with automatic port detection and reconnection capabilities.
 
 Example:
-    >>> from voice_to_midi.midi import MidiOutput
+    >>> from audio_to_midi.midi import MidiOutput
     >>> midi_out = MidiOutput()
     >>> midi_out.connect('IAC Driver Bus 1')
     >>> midi_out.send_note_on(60, 64)  # Middle C, velocity 64

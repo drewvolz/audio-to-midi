@@ -11,8 +11,8 @@ def test_basic():
 def test_import():
     """Test that the main module can be imported."""
     try:
-        import voice_to_midi
+        import audio_to_midi
 
-        assert hasattr(voice_to_midi, "__version__")
+        assert hasattr(audio_to_midi, "__version__")
     except ImportError:
-        pytest.skip("voice_to_midi package not available")
+        pytest.skip("audio_to_midi package not available")

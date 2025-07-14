@@ -11,7 +11,7 @@ The configuration system uses JSON files for persistence and provides
 a clean API for accessing settings throughout the application.
 
 Example:
-    >>> from voice_to_midi.config import ConfigManager
+    >>> from audio_to_midi.config import ConfigManager
     >>> config = ConfigManager()
     >>> config.load()
     >>> config.get_audio_device()

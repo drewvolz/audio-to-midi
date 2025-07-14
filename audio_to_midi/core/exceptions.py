@@ -1,42 +1,42 @@
 """
-Custom exceptions for the Voice to MIDI application.
+Custom exceptions for the Audio to MIDI application.
 
 This module defines application-specific exceptions that provide better
 error handling and debugging information throughout the system.
 """
 
 
-class VoiceToMidiError(Exception):
-    """Base exception for all Voice to MIDI application errors."""
+class AudioToMidiError(Exception):
+    """Base exception for all Audio to MIDI application errors."""
 
     pass
 
 
-class AudioError(VoiceToMidiError):
+class AudioError(AudioToMidiError):
     """Exception raised for audio-related errors."""
 
     pass
 
 
-class MidiError(VoiceToMidiError):
+class MidiError(AudioToMidiError):
     """Exception raised for MIDI-related errors."""
 
     pass
 
 
-class ConfigError(VoiceToMidiError):
+class ConfigError(AudioToMidiError):
     """Exception raised for configuration-related errors."""
 
     pass
 
 
-class DeviceError(VoiceToMidiError):
+class DeviceError(AudioToMidiError):
     """Exception raised for device management errors."""
 
     pass
 
 
-class PitchDetectionError(VoiceToMidiError):
+class PitchDetectionError(AudioToMidiError):
     """Exception raised for pitch detection errors."""
 
     pass

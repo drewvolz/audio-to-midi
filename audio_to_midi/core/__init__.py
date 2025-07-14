@@ -11,18 +11,18 @@ The core module provides the main entry point and coordinates the audio capture,
 pitch detection, and MIDI output pipeline.
 
 Example:
-    >>> from voice_to_midi.core import VoiceToMidiApp
-    >>> app = VoiceToMidiApp()
+    >>> from audio_to_midi.core import AudioToMidiApp
+    >>> app = AudioToMidiApp()
     >>> app.configure_devices()
     >>> app.start()
 """
 
-from .application import VoiceToMidiApp
-from .exceptions import AudioError, ConfigError, MidiError, VoiceToMidiError
+from .application import AudioToMidiApp
+from .exceptions import AudioError, ConfigError, MidiError, AudioToMidiError
 
 __all__ = [
-    "VoiceToMidiApp",
-    "VoiceToMidiError",
+    "AudioToMidiApp",
+    "AudioToMidiError",
     "AudioError",
     "MidiError",
     "ConfigError",
