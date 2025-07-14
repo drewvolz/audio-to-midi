@@ -36,13 +36,13 @@ class AudioCapture:
         >>> capture.stop()
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize the audio capture."""
         self._audio = None
         self._stream = None
         self._is_capturing = False
         self._capture_thread = None
-        self._audio_queue = queue.Queue()
+        self._audio_queue: queue.Queue = queue.Queue()
 
         # Configuration
         self.sample_rate = 44100
@@ -179,18 +179,18 @@ class AudioCapture:
                 audio_data = self._audio_queue.get()
             else:
                 audio_data = self._audio_queue.get(timeout=timeout)
-
-            return audio_data
-
+            if isinstance(audio_data, np.ndarray):
+                return audio_data
+            return None
         except queue.Empty:
             return None
         except Exception as e:
             logger.error(f"Error getting audio data: {e}")
-            if self.on_error:
-                self.on_error(AudioError(f"Error getting audio data: {e}"))
             return None
 
-    def _stream_callback(self, in_data, frame_count, time_info, status):
+    def _stream_callback(
+        self, in_data: bytes, frame_count: int, time_info, status
+    ) -> tuple:
         """PyAudio stream callback."""
         try:
             # Convert audio data to numpy array
@@ -256,6 +256,6 @@ class AudioCapture:
         """Get current audio queue size."""
         return self._audio_queue.qsize()
 
-    def __del__(self):
+    def __del__(self) -> None:
         """Destructor to clean up resources."""
         self.close()

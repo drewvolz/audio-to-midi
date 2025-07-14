@@ -30,17 +30,17 @@ class PitchAnalyzer:
         >>> vibrato = analyzer.detect_vibrato()
     """
 
-    def __init__(self, history_size: int = 100):
+    def __init__(self, history_size: int = 100) -> None:
         """
         Initialize the pitch analyzer.
 
         Args:
             history_size: Number of pitch samples to keep in history
         """
-        self.history_size = history_size
-        self.pitch_history = deque(maxlen=history_size)
-        self.confidence_history = deque(maxlen=history_size)
-        self.time_history = deque(maxlen=history_size)
+        self.history_size: int = history_size
+        self.pitch_history: deque = deque(maxlen=history_size)
+        self.confidence_history: deque = deque(maxlen=history_size)
+        self.time_history: deque = deque(maxlen=history_size)
 
         # Analysis parameters
         self.stability_threshold = 0.05  # 5% frequency variation
@@ -187,7 +187,10 @@ class PitchAnalyzer:
                 and self.vibrato_min_rate <= vibrato_rate <= self.vibrato_max_rate
             )
 
-            return has_vibrato, vibrato_rate, vibrato_depth * 100
+            has_vibrato = bool(has_vibrato)
+            vibrato_rate = float(vibrato_rate)
+            vibrato_depth = float(vibrato_depth * 100)
+            return has_vibrato, vibrato_rate, vibrato_depth
 
         except Exception as e:
             logger.debug(f"Vibrato detection failed: {e}")
@@ -350,7 +353,7 @@ class PitchAnalyzer:
         Returns:
             Dictionary with note names as keys and counts as values
         """
-        note_counts = {}
+        note_counts: dict = {}
 
         for pitch in self.pitch_history:
             if pitch is not None:
@@ -384,3 +387,24 @@ class PitchAnalyzer:
                 "vibrato_min_depth": self.vibrato_min_depth,
             },
         }
+
+    def get_average_pitch(self) -> float:
+        if not self.pitch_history:
+            return 0.0
+        try:
+            return float(np.mean(self.pitch_history))
+        except Exception:
+            return 0.0
+
+    def get_average_confidence(self) -> float:
+        if not self.confidence_history:
+            return 0.0
+        try:
+            return float(np.mean(self.confidence_history))
+        except Exception:
+            return 0.0
+
+    def get_last_pitch(self) -> float:
+        if not self.pitch_history:
+            return 0.0
+        return float(self.pitch_history[-1])

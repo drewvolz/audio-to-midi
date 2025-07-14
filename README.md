@@ -7,12 +7,12 @@
 - **To change devices/settings** at any time:
   - Run with `-c` or `--choose-devices`:
 
-        uv run python voice_to_midi.py run -c
+        uv run python audio_to_midi.py run -c
 
     This will show the device selection menus and save your new choices as the new defaults.
   - Or use the config command to change devices/settings without starting the app:
 
-        uv run python voice_to_midi.py config
+        uv run python audio_to_midi.py config
 
 - Your choices are saved to `~/.voice_to_midi_config.json` and will be used next time.
 - If your device list changes (e.g., you unplug/replug a mic), the app will match by device name, not just position, so your preferences are robust.
@@ -29,7 +29,7 @@ You can use a MIDI pedal (such as a footswitch) to control note duration in real
 
 - To set up or change your pedal, run:
 
-      uv run python voice_to_midi.py config
+      uv run python audio_to_midi.py config
 
 - When prompted, select your pedal's MIDI input port.
 - Press your pedal when asked to "learn" the pedal's MIDI message. The app will detect and save the message for future use.
@@ -158,7 +158,7 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
 
 # Run the application
-python -m voice_to_midi.main
+python -m audio_to_midi.main
 ```
 
 ## Usage
@@ -271,7 +271,7 @@ python -m voice_to_midi.main
 ```
 voice-to-midi/
 ├── pyproject.toml          # Project configuration and dependencies
-├── voice_to_midi.py        # Main application
+├── audio_to_midi.py        # Main application
 ├── README.md              # This file
 └── tests/                 # Test files (future)
 ```

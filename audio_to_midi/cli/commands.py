@@ -14,6 +14,7 @@ from rich.console import Console
 from ..audio.capture import AudioCapture
 from ..audio.processor import AudioProcessor
 from ..config import ConfigManager
+from ..config.settings import Settings
 from ..core.application import VoiceToMidiApp
 from ..core.exceptions import ConfigError, VoiceToMidiError
 from ..devices.audio_devices import AudioDeviceManager
@@ -27,8 +28,11 @@ console = Console()
 
 
 def _configure_basic_settings(
-    cli_interface, settings, audio_device_manager, midi_device_manager
-):
+    cli_interface: CLIInterface,
+    settings: Settings,
+    audio_device_manager: AudioDeviceManager,
+    midi_device_manager: MidiDeviceManager,
+) -> None:
     """Configure basic settings: audio input and MIDI output devices."""
     cli_interface.display_header("Basic Settings")
 
@@ -57,7 +61,9 @@ def _configure_basic_settings(
         cli_interface.display_success(f"MIDI port set to: {midi_port.name}")
 
 
-def _configure_advanced_settings(cli_interface, settings):
+def _configure_advanced_settings(
+    cli_interface: CLIInterface, settings: Settings
+) -> None:
     """Configure advanced settings: audio, MIDI, and pitch detection parameters."""
     cli_interface.display_header("Advanced Settings")
 
@@ -89,7 +95,7 @@ def _configure_advanced_settings(cli_interface, settings):
 @click.group(context_settings={"help_option_names": ["-h", "--help"]})
 @click.version_option(version="0.2.0")
 @click.option("--verbose", "-v", is_flag=True, help="Enable verbose logging")
-def cli(verbose):
+def cli(verbose: bool) -> None:
     """
     🎤 Voice to MIDI Translator 🎹
 
@@ -144,8 +150,14 @@ def cli(verbose):
 )
 @click.option("--config-path", type=click.Path(), help="Path to configuration file")
 def run_app(
-    choose_devices, transpose, min_freq, max_freq, chunk_size, confidence, config_path
-):
+    choose_devices: bool,
+    transpose: int,
+    min_freq: float,
+    max_freq: float,
+    chunk_size: str,
+    confidence: float,
+    config_path: str,
+) -> None:
     """
     Start the Voice to MIDI application.
 
@@ -247,13 +259,13 @@ def run_app(
         cli_interface.display_configuration_summary(settings.to_dict())
 
         # Set up event handlers
-        def on_note_change(note, frequency, confidence):
+        def on_note_change(note: int, frequency: float, confidence: float) -> None:
             from ..utils.helpers import midi_note_to_name
 
             note_name = midi_note_to_name(note) if note else "None"
             cli_interface.display_status(frequency, note_name, note or 0, confidence)
 
-        def on_error(error):
+        def on_error(error: Exception) -> None:
             cli_interface.display_error_panel(error)
 
         app.on_note_change = on_note_change
@@ -292,7 +304,9 @@ def run_app(
 @click.option("--midi", is_flag=True, help="Configure MIDI settings")
 @click.option("--pitch", is_flag=True, help="Configure pitch detection settings")
 @click.option("--config-path", type=click.Path(), help="Path to configuration file")
-def config_command(advanced, pedal, audio, midi, pitch, config_path):
+def config_command(
+    advanced: bool, pedal: bool, audio: bool, midi: bool, pitch: bool, config_path: str
+) -> None:
     """
     Configure devices and settings.
 
@@ -409,7 +423,7 @@ def config_command(advanced, pedal, audio, midi, pitch, config_path):
 
 
 @cli.command("list")
-def list_devices():
+def list_devices() -> None:
     """
     Show available audio and MIDI devices.
 
@@ -452,7 +466,7 @@ def list_devices():
 
 @cli.command("show")
 @click.option("--config-path", type=click.Path(), help="Path to configuration file")
-def show_config(config_path):
+def show_config(config_path: str) -> None:
     """
     Display current configuration.
 
@@ -479,7 +493,7 @@ def show_config(config_path):
 
 @cli.command("reset")
 @click.option("--config-path", type=click.Path(), help="Path to configuration file")
-def reset_config(config_path):
+def reset_config(config_path: str) -> None:
     """
     Reset configuration to defaults.
 
@@ -513,7 +527,7 @@ def reset_config(config_path):
 
 
 @cli.command("help")
-def help_command():
+def help_command() -> None:
     """
     Show detailed help information.
 

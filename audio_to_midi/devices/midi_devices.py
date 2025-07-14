@@ -45,7 +45,7 @@ class MidiDeviceManager:
         ...     print("Port is working")
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize the MIDI device manager."""
         self._ports_cache: Optional[List[MidiPort]] = None
         logger.debug("MIDI device manager initialized")

@@ -12,7 +12,7 @@ from .cli.commands import cli
 from .utils.helpers import setup_logging
 
 
-def check_system_dependencies():
+def check_system_dependencies() -> list:
     """
     Check for required system dependencies.
 
@@ -36,7 +36,7 @@ def check_system_dependencies():
     return missing
 
 
-def display_dependency_error(missing_deps):
+def display_dependency_error(missing_deps: list) -> None:
     """
     Display system dependency installation instructions.
 
@@ -61,7 +61,7 @@ def display_dependency_error(missing_deps):
     print("\nAfter installing, re-run your command.")
 
 
-def main():
+def main() -> None:
     """Main entry point for the Voice to MIDI application."""
     # Check system dependencies first
     missing_deps = check_system_dependencies()

@@ -6,7 +6,7 @@ and silence detection before pitch analysis.
 """
 
 import logging
-from typing import Tuple
+from typing import Tuple, cast
 
 import numpy as np
 from scipy import signal
@@ -30,7 +30,7 @@ class AudioProcessor:
         >>> is_silent = processor.is_silent(processed_data)
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize the audio processor."""
         self.sample_rate = 44100
         self.silence_threshold = 0.01
@@ -136,7 +136,7 @@ class AudioProcessor:
             return True
 
         # Use peak level for silence detection
-        peak_level = np.max(np.abs(audio_data))
+        peak_level: float = float(np.max(np.abs(audio_data)))
         return peak_level < self.silence_threshold
 
     def get_audio_level(self, audio_data: np.ndarray) -> float:
@@ -152,7 +152,7 @@ class AudioProcessor:
         if audio_data is None or len(audio_data) == 0:
             return 0.0
 
-        return np.sqrt(np.mean(audio_data**2))
+        return float(np.sqrt(np.mean(audio_data**2)))
 
     def get_peak_level(self, audio_data: np.ndarray) -> float:
         """
@@ -167,7 +167,7 @@ class AudioProcessor:
         if audio_data is None or len(audio_data) == 0:
             return 0.0
 
-        return np.max(np.abs(audio_data))
+        return float(np.max(np.abs(audio_data)))
 
     def normalize_audio(
         self, audio_data: np.ndarray, target_level: float = 0.5
@@ -183,11 +183,11 @@ class AudioProcessor:
             Normalized audio data
         """
         if audio_data is None or len(audio_data) == 0:
-            return audio_data
+            return np.zeros(0, dtype=float)
 
         current_level = self.get_audio_level(audio_data)
         if current_level == 0:
-            return audio_data
+            return np.zeros_like(audio_data)
 
         gain = target_level / current_level
         return audio_data * gain
@@ -216,19 +216,16 @@ class AudioProcessor:
     def _apply_high_pass_filter(self, audio_data: np.ndarray) -> np.ndarray:
         """Apply high-pass filter to audio data."""
         if self._filter_b is None or self._filter_a is None:
-            return audio_data
-
+            return cast(np.ndarray, np.copy(audio_data))
         try:
             # Apply filter with state to maintain continuity
             filtered_data, self._filter_state = signal.lfilter(
                 self._filter_b, self._filter_a, audio_data, zi=self._filter_state
             )
-
-            return filtered_data
-
+            return cast(np.ndarray, filtered_data)
         except Exception as e:
             logger.error(f"High-pass filtering failed: {e}")
-            return audio_data
+            return cast(np.ndarray, np.copy(audio_data))
 
     def _apply_window(self, audio_data: np.ndarray) -> np.ndarray:
         """Apply windowing to audio data."""
@@ -240,14 +237,11 @@ class AudioProcessor:
             elif self.window_type == "blackman":
                 window = np.blackman(len(audio_data))
             else:
-                # No windowing
-                return audio_data
-
-            return audio_data * window
-
+                return cast(np.ndarray, np.copy(audio_data))
+            return cast(np.ndarray, audio_data * window)
         except Exception as e:
             logger.error(f"Windowing failed: {e}")
-            return audio_data
+            return cast(np.ndarray, np.copy(audio_data))
 
     def get_frequency_spectrum(
         self, audio_data: np.ndarray
@@ -262,43 +256,39 @@ class AudioProcessor:
             Tuple of (frequencies, magnitudes)
         """
         if audio_data is None or len(audio_data) == 0:
-            return np.array([]), np.array([])
+            return np.zeros(0, dtype=float), np.zeros(0, dtype=float)
 
         try:
             # Compute FFT
             fft = np.fft.rfft(audio_data)
             magnitudes = np.abs(fft)
             frequencies = np.fft.rfftfreq(len(audio_data), 1.0 / self.sample_rate)
-
             return frequencies, magnitudes
-
         except Exception as e:
-            logger.error(f"FFT computation failed: {e}")
-            return np.array([]), np.array([])
+            logger.error(f"Frequency spectrum calculation failed: {e}")
+            return np.zeros(0, dtype=float), np.zeros(0, dtype=float)
 
     def detect_clipping(self, audio_data: np.ndarray, threshold: float = 0.95) -> bool:
         """
-        Detect audio clipping.
+        Detect if audio is clipping.
 
         Args:
-            audio_data: Audio data to check
-            threshold: Clipping threshold (0-1)
+            audio_data: Audio data
+            threshold: Clipping threshold
 
         Returns:
-            True if clipping is detected
+            True if audio is clipping
         """
         if audio_data is None or len(audio_data) == 0:
             return False
-
-        peak_level = self.get_peak_level(audio_data)
-        return peak_level > threshold
+        return bool(np.any(np.abs(audio_data) >= threshold))
 
     def get_processing_info(self) -> dict:
         """
-        Get information about current processing settings.
+        Get information about the current processing configuration.
 
         Returns:
-            Dictionary with processing information
+            Dictionary with processing info
         """
         return {
             "sample_rate": self.sample_rate,
@@ -306,5 +296,4 @@ class AudioProcessor:
             "window_type": self.window_type,
             "apply_high_pass": self.apply_high_pass,
             "high_pass_freq": self.high_pass_freq,
-            "filter_enabled": self._filter_b is not None,
         }

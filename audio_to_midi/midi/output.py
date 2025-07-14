@@ -34,7 +34,7 @@ class MidiOutput:
         >>> midi_out.close()
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize the MIDI output."""
         self.port_name: Optional[str] = None
         self.channel = 0
@@ -427,6 +427,6 @@ class MidiOutput:
             "auto_reconnect": self.auto_reconnect,
         }
 
-    def __del__(self):
+    def __del__(self) -> None:
         """Destructor to clean up resources."""
         self.close()

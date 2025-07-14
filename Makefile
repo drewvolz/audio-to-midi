@@ -18,7 +18,7 @@ format:
 
 # Type checking (matches CI)
 typecheck:
-	uv run mypy voice_to_midi/ || echo "Type checking needs configuration"
+	uv run mypy audio_to_midi/ || echo "Type checking needs configuration"
 
 # Run all quality checks (matches CI)
 quality: lint format-check typecheck
@@ -34,7 +34,7 @@ test:
 
 # Run tests with coverage
 test-cov:
-	uv run pytest tests/ -v --cov=voice_to_midi --cov-report=html
+	uv run pytest tests/ -v --cov=audio_to_midi --cov-report=html
 
 # Install pre-commit hooks
 install-hooks:

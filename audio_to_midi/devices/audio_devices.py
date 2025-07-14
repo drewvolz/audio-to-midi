@@ -45,7 +45,7 @@ class AudioDeviceManager:
         ...     print("Device is working")
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize the audio device manager."""
         self._audio = None
         self._devices_cache: Optional[List[AudioDevice]] = None
@@ -136,6 +136,8 @@ class AudioDeviceManager:
             True if device is working, False otherwise
         """
         try:
+            if self._audio is None:
+                return False
             stream = self._audio.open(
                 format=pyaudio.paFloat32,
                 channels=1,
@@ -144,16 +146,11 @@ class AudioDeviceManager:
                 input_device_index=device.index,
                 frames_per_buffer=1024,
             )
-
-            # Try to read a small amount of data
             stream.read(int(device.sample_rate * duration), exception_on_overflow=False)
-
             stream.stop_stream()
             stream.close()
-
             logger.debug(f"Device test successful: {device.name}")
             return True
-
         except Exception as e:
             logger.warning(f"Device test failed for {device.name}: {e}")
             return False
@@ -169,6 +166,8 @@ class AudioDeviceManager:
             Dictionary with device information
         """
         try:
+            if self._audio is None:
+                return {}
             info = self._audio.get_device_info_by_index(device.index)
             return {
                 "name": info.get("name", "Unknown"),
@@ -227,6 +226,6 @@ class AudioDeviceManager:
             self._audio = None
             logger.debug("PyAudio terminated")
 
-    def __del__(self):
+    def __del__(self) -> None:
         """Destructor to clean up resources."""
         self.close()

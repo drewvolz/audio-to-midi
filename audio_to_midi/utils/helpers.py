@@ -163,7 +163,7 @@ def linear_to_db(linear: float) -> float:
     """
     if linear <= 0:
         return -float("inf")
-    return 20 * np.log10(linear)
+    return float(20 * np.log10(linear))
 
 
 def smooth_value(current: float, target: float, smoothing: float = 0.1) -> float:

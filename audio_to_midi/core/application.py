@@ -38,7 +38,7 @@ class VoiceToMidiApp:
         >>> app.stop()
     """
 
-    def __init__(self, config_path: Optional[str] = None):
+    def __init__(self, config_path: Optional[str] = None) -> None:
         """
         Initialize the Voice to MIDI application.
 
@@ -58,8 +58,8 @@ class VoiceToMidiApp:
 
         # Runtime state
         self.is_running = False
-        self.threads = []
-        self.queues = {
+        self.threads: list = []
+        self.queues: dict = {
             "audio": queue.Queue(),
             "pitch": queue.Queue(),
             "midi": queue.Queue(),
@@ -117,7 +117,7 @@ class VoiceToMidiApp:
         except Exception as e:
             raise VoiceToMidiError(f"Failed to save configuration: {e}")
 
-    def inject_dependencies(self, **modules) -> None:
+    def inject_dependencies(self, **modules: object) -> None:
         """
         Inject module dependencies.
 
@@ -143,6 +143,7 @@ class VoiceToMidiApp:
             raise VoiceToMidiError(
                 "Configuration must be loaded before configuring devices"
             )
+        settings = self.settings  # type: ignore[assignment]
 
         if not self.audio_device_manager or not self.midi_device_manager:
             raise VoiceToMidiError(
@@ -151,39 +152,39 @@ class VoiceToMidiApp:
 
         try:
             # Configure audio device
-            if force_selection or not self.settings.audio.input_device_name:
+            if force_selection or not settings.audio.input_device_name:
                 devices = self.audio_device_manager.list_input_devices()
                 if not devices:
                     raise VoiceToMidiError("No audio input devices found")
 
                 # For now, use the first device or saved device
-                if self.settings.audio.input_device_name:
+                if settings.audio.input_device_name:
                     device = self.audio_device_manager.get_device_by_name(
-                        self.settings.audio.input_device_name
+                        settings.audio.input_device_name
                     )
                 else:
                     device = devices[0]
 
-                self.settings.audio.input_device_index = device.index
-                self.settings.audio.input_device_name = device.name
+                settings.audio.input_device_index = device.index
+                settings.audio.input_device_name = device.name
                 logger.info(f"Audio device configured: {device.name}")
 
             # Configure MIDI device
-            if force_selection or not self.settings.midi.output_port_name:
+            if force_selection or not settings.midi.output_port_name:
                 ports = self.midi_device_manager.list_output_ports()
                 if not ports:
                     raise VoiceToMidiError("No MIDI output ports found")
 
                 # For now, use the first port or saved port
-                if self.settings.midi.output_port_name:
+                if settings.midi.output_port_name:
                     port = self.midi_device_manager.get_port_by_name(
-                        self.settings.midi.output_port_name
+                        settings.midi.output_port_name
                     )
                 else:
                     port = ports[0]
 
-                self.settings.midi.output_port_index = port.index
-                self.settings.midi.output_port_name = port.name
+                settings.midi.output_port_index = port.index
+                settings.midi.output_port_name = port.name
                 logger.info(f"MIDI device configured: {port.name}")
 
         except Exception as e:
@@ -272,42 +273,50 @@ class VoiceToMidiApp:
 
     def _initialize_modules(self) -> None:
         """Initialize all modules with current settings."""
+        if self.settings is None:
+            raise VoiceToMidiError(
+                "Configuration must be loaded before initializing modules"
+            )
+        settings = self.settings
+        if self.audio_capture is None:
+            raise VoiceToMidiError("Audio capture module not injected")
+        if self.audio_processor is None:
+            raise VoiceToMidiError("Audio processor module not injected")
+        if self.pitch_detector is None:
+            raise VoiceToMidiError("Pitch detector module not injected")
+        if self.midi_output is None:
+            raise VoiceToMidiError("MIDI output module not injected")
         # Initialize audio capture
         self.audio_capture.configure(
-            sample_rate=self.settings.audio.sample_rate,
-            chunk_size=self.settings.audio.chunk_size,
-            channels=self.settings.audio.channels,
-            device_index=self.settings.audio.input_device_index,
+            sample_rate=settings.audio.sample_rate,
+            chunk_size=settings.audio.chunk_size,
+            channels=settings.audio.channels,
+            device_index=settings.audio.input_device_index,
         )
-
         # Initialize audio processor
         self.audio_processor.configure(
-            sample_rate=self.settings.audio.sample_rate,
-            silence_threshold=self.settings.audio.silence_threshold,
+            sample_rate=settings.audio.sample_rate,
+            silence_threshold=settings.audio.silence_threshold,
         )
-
         # Initialize pitch detector
         self.pitch_detector.configure(
-            sample_rate=self.settings.audio.sample_rate,
-            min_freq=self.settings.pitch.min_freq,
-            max_freq=self.settings.pitch.max_freq,
-            confidence_threshold=self.settings.pitch.confidence_threshold,
+            sample_rate=settings.audio.sample_rate,
+            min_freq=settings.pitch.min_freq,
+            max_freq=settings.pitch.max_freq,
+            confidence_threshold=settings.pitch.confidence_threshold,
         )
-
         # Configure smoothing for more stable pitch detection
         self.pitch_detector.set_smoothing(enabled=False)
-
         # Initialize MIDI output
         self.midi_output.configure(
-            port_name=self.settings.midi.output_port_name,
-            channel=self.settings.midi.channel,
-            velocity=self.settings.midi.velocity,
+            port_name=settings.midi.output_port_name,
+            channel=settings.midi.channel,
+            velocity=settings.midi.velocity,
         )
-
         # Connect to MIDI output
         if not self.midi_output.connect():
             logger.warning(
-                f"Failed to connect to MIDI port: {self.settings.midi.output_port_name}"
+                f"Failed to connect to MIDI port: {settings.midi.output_port_name}"
             )
 
     def _start_threads(self) -> None:
@@ -337,6 +346,9 @@ class VoiceToMidiApp:
         """Audio capture processing loop."""
         logger.info("Audio capture loop started")
         try:
+            if self.audio_capture is None:
+                logger.error("Audio capture module not injected")
+                return
             self.audio_capture.start()
             logger.info("Audio capture started successfully")
 
@@ -358,12 +370,16 @@ class VoiceToMidiApp:
             if self.on_error:
                 self.on_error(AudioError(f"Audio capture loop error: {e}"))
         finally:
-            self.audio_capture.stop()
+            if self.audio_capture is not None:
+                self.audio_capture.stop()
 
     def _audio_processing_loop(self) -> None:
         """Audio processing and pitch detection loop."""
         logger.info("Audio processing loop started")
         try:
+            if self.audio_processor is None or self.pitch_detector is None:
+                logger.error("Audio processor or pitch detector module not injected")
+                return
             while self.is_running:
                 try:
                     audio_data = self.queues["audio"].get(timeout=0.1)
@@ -382,15 +398,16 @@ class VoiceToMidiApp:
                     current_time = time.time()
 
                     # Note detection algorithm with silence detection
-                    if (
-                        frequency is None
-                        or confidence < self.settings.pitch.confidence_threshold
+                    if frequency is None or (
+                        self.settings is not None
+                        and confidence < self.settings.pitch.confidence_threshold
                     ):
                         if self.current_note is not None:
                             if self.silence_start_time is None:
                                 self.silence_start_time = current_time
                             elif (
-                                current_time - self.silence_start_time
+                                self.settings is not None
+                                and current_time - self.silence_start_time
                                 >= self.settings.pitch.silence_release_time
                             ):
                                 # Send note off
@@ -410,9 +427,9 @@ class VoiceToMidiApp:
                     )
 
                     # Debounce: Only trigger if pitch is stable for debounce_time and differs by min_semitone_diff
-                    if (
-                        self.last_pitch is None
-                        or abs(midi_note - self.last_pitch)
+                    if self.last_pitch is None or (
+                        self.settings is not None
+                        and abs(midi_note - self.last_pitch)
                         >= self.settings.pitch.min_semitone_diff
                     ):
                         self.stable_pitch = midi_note
@@ -420,17 +437,21 @@ class VoiceToMidiApp:
                         logger.debug(
                             f"Reset stable pitch to {midi_note}, last_pitch was {self.last_pitch}"
                         )
-                    elif (
-                        midi_note == self.stable_pitch
-                        and (current_time - self.stable_pitch_time)
-                        >= self.settings.pitch.debounce_time
+                    elif midi_note == self.stable_pitch and (
+                        current_time - self.stable_pitch_time
+                    ) >= (
+                        self.settings.pitch.debounce_time
+                        if self.settings is not None
+                        else 0
                     ):
                         # Only send note if it's different from the current note and held for min_note_duration
                         if (
                             self.current_note is None or midi_note != self.current_note
-                        ) and (
-                            current_time - self.stable_pitch_time
-                        ) >= self.settings.pitch.min_note_duration:
+                        ) and (current_time - self.stable_pitch_time) >= (
+                            self.settings.pitch.min_note_duration
+                            if self.settings is not None
+                            else 0
+                        ):
                             # Send new note
                             self.current_note = midi_note
                             logger.debug(f"Sending MIDI note: {midi_note}")
@@ -526,6 +547,10 @@ class VoiceToMidiApp:
         """Convert frequency to MIDI note with transpose."""
         from ..utils.helpers import frequency_to_midi_note
 
+        if self.settings is None:
+            raise VoiceToMidiError(
+                "Configuration must be loaded before converting frequency to MIDI note"
+            )
         return frequency_to_midi_note(frequency, self.settings.midi.transpose_semitones)
 
     @property

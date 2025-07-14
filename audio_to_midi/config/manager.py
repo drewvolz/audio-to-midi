@@ -118,7 +118,7 @@ class ConfigManager:
             raise ConfigError("Configuration must be loaded before accessing settings")
         return self._settings
 
-    def update_settings(self, **kwargs) -> None:
+    def update_settings(self, **kwargs: Any) -> None:
         """
         Update settings with new values.
 

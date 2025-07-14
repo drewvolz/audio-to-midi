@@ -35,7 +35,7 @@ class CLIInterface:
         >>> cli.display_success("Configuration saved!")
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize the CLI interface."""
         self.console = Console()
         logger.debug("CLI interface initialized")
@@ -365,7 +365,7 @@ class CLIInterface:
         )
 
         # MIDI channel
-        def validate_channel(val):
+        def validate_channel(val: str) -> bool:
             if not val.strip():
                 return False
             try:
@@ -640,3 +640,23 @@ class CLIInterface:
             content, title="[bold]Voice to MIDI Help[/bold]", border_style="blue"
         )
         self.console.print(panel)
+
+    def get_selected_audio_device(self) -> Optional[AudioDevice]:
+        if (
+            hasattr(self, "selected_audio_device")
+            and self.selected_audio_device is not None
+        ):
+            return self.selected_audio_device
+        return None
+
+    def get_selected_midi_port(self) -> Optional[MidiPort]:
+        if hasattr(self, "selected_midi_port") and self.selected_midi_port is not None:
+            return self.selected_midi_port
+        return None
+
+    def validate_channel(self, val: str) -> bool:
+        try:
+            channel = int(val)
+            return 1 <= channel <= 16
+        except Exception:
+            return False

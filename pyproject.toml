@@ -1,5 +1,5 @@
 [project]
-name = "voice-to-midi"
+name = "audio-to-midi"
 version = "0.2.0"
 description = "Modular real-time voice to MIDI translation with enhanced CLI"
 authors = [
@@ -22,16 +22,19 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
     "pytest>=6.0",
+    "pytest-cov>=3.0",
     "black>=21.0",
     "ruff>=0.8.0",
     "mypy>=0.910",
+    "types-requests",
     "sphinx>=4.0",
     "sphinx-rtd-theme>=1.0",
+    "pre-commit>=2.0",
 ]
 
 # System dependencies required
 [project.scripts]
-voice-to-midi = "voice_to_midi.main:main"
+audio-to-midi = "audio_to_midi.main:main"
 
 [build-system]
 requires = ["hatchling"]
@@ -77,6 +80,7 @@ warn_no_return = true
 warn_unreachable = true
 strict_equality = true
 show_error_codes = true
+disable_error_code = ["unreachable"]
 
 [[tool.mypy.overrides]]
 module = [
@@ -89,8 +93,8 @@ module = [
 ignore_missing_imports = true
 
 [tool.uvx]
-name = "voice-to-midi"
-entry-point = "voice_to_midi.main:main"
+name = "audio-to-midi"
+entry-point = "audio_to_midi.main:main"
 
 [dependency-groups]
 dev = [

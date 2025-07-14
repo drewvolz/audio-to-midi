@@ -32,21 +32,21 @@ class PitchDetector:
         >>> midi_note = detector.frequency_to_midi(frequency)
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize the pitch detector."""
-        self.sample_rate = 44100
-        self.min_freq = 80.0
-        self.max_freq = 800.0
-        self.confidence_threshold = 0.8
-        self.algorithm = "autocorrelation"
+        self.sample_rate: int = 44100
+        self.min_freq: float = 80.0
+        self.max_freq: float = 800.0
+        self.confidence_threshold: float = 0.8
+        self.algorithm: str = "autocorrelation"
 
         # Smoothing parameters
-        self.smoothing_enabled = True
-        self.smoothing_factor = 0.3
-        self.last_frequency = None
+        self.smoothing_enabled: bool = True
+        self.smoothing_factor: float = 0.3
+        self.last_frequency: Optional[float] = None
 
         # Octave correction
-        self.octave_correction = True
+        self.octave_correction: bool = True
 
         logger.debug("Pitch detector initialized")
 
@@ -211,11 +211,10 @@ class PitchDetector:
         min_lag = np.argmin(yin_buffer[1:]) + 1
 
         if min_lag > 0:
-            frequency = self.sample_rate / min_lag
+            frequency = float(self.sample_rate) / float(min_lag)
             if self.min_freq <= frequency <= self.max_freq:
-                confidence = 1.0 - yin_buffer[min_lag]
+                confidence = 1.0 - float(yin_buffer[min_lag])
                 return frequency, confidence
-
         return None, 0.0
 
     def _fft_pitch(self, audio_data: np.ndarray) -> Tuple[Optional[float], float]:

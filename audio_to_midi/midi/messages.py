@@ -29,7 +29,7 @@ class MidiMessageHandler:
         >>> is_valid = handler.validate_message(note_on)
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize the MIDI message handler."""
         logger.debug("MIDI message handler initialized")
 
