@@ -123,17 +123,6 @@ In **MuseScore** (or your DAW):
 - Set the MIDI input to your IAC port
 - Now, when you sing, MuseScore will receive MIDI notes as if you were playing a keyboard!
 
-### Windows: loopMIDI
-
-1. Download and install [loopMIDI](https://www.tobias-erichsen.de/software/loopmidi.html)
-2. Create a new virtual port (e.g., "AudioToMidi")
-3. Select this port in your app and in your MIDI software as input
-
-### Linux: aconnect or QJackCtl
-
-- Use `aconnect` or `qjackctl` to create and route virtual MIDI ports
-- Set your app to output to the virtual port, and your MIDI software to receive from it
-
 ## Usage
 
 - **Launch the application**: Run `uv run voice-to-midi run`
