@@ -18,6 +18,12 @@ Example:
 """
 
 from .application import VoiceToMidiApp
-from .exceptions import VoiceToMidiError, AudioError, MidiError, ConfigError
+from .exceptions import AudioError, ConfigError, MidiError, VoiceToMidiError
 
-__all__ = ["VoiceToMidiApp", "VoiceToMidiError", "AudioError", "MidiError", "ConfigError"]
+__all__ = [
+    "VoiceToMidiApp",
+    "VoiceToMidiError",
+    "AudioError",
+    "MidiError",
+    "ConfigError",
+]

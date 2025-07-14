@@ -17,7 +17,7 @@ Example:
     >>> midi_out.send_note_on(60, 64)  # Middle C, velocity 64
 """
 
-from .output import MidiOutput
 from .messages import MidiMessageHandler
+from .output import MidiOutput
 
 __all__ = ["MidiOutput", "MidiMessageHandler"]

@@ -30,12 +30,12 @@ __author__ = "Voice to MIDI Translator"
 __email__ = "user@example.com"
 
 from .core.application import VoiceToMidiApp
-from .core.exceptions import VoiceToMidiError, AudioError, MidiError, ConfigError
+from .core.exceptions import AudioError, ConfigError, MidiError, VoiceToMidiError
 
 __all__ = [
     "VoiceToMidiApp",
     "VoiceToMidiError",
-    "AudioError", 
+    "AudioError",
     "MidiError",
     "ConfigError",
 ]

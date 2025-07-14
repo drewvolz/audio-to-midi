@@ -14,6 +14,6 @@ Example:
     True
 """
 
-from .helpers import setup_logging, validate_frequency_range, frequency_to_note_name
+from .helpers import frequency_to_note_name, setup_logging, validate_frequency_range
 
 __all__ = ["setup_logging", "validate_frequency_range", "frequency_to_note_name"]

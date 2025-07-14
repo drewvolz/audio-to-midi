@@ -143,8 +143,8 @@ cd voice-to-midi
 # Install dependencies using uv
 uv sync
 
-# Activate the virtual environment
-uv run python voice_to_midi.py
+# Run the application
+uv run voice-to-midi
 ```
 
 ### 3. Alternative setup with pip
@@ -158,20 +158,25 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
 
 # Run the application
-python voice_to_midi.py
+python -m voice_to_midi.main
 ```
 
 ## Usage
 
-- **Launch the application**: Run `uv run python voice_to_midi.py run`
+- **Launch the application**: Run `uv run voice-to-midi run`
   - If you have saved settings, the app will start silently with your last-used devices.
   - To change devices, run with `-c` or `--choose-devices`.
-- **Configure devices/settings only** (no app start):
-
-      uv run python voice_to_midi.py config --max-midi-note 84
+- **Configure devices/settings**:
+  - **Basic configuration** (audio input + MIDI output): `uv run voice-to-midi config`
+  - **Advanced configuration** (all settings): `uv run voice-to-midi config --advanced`
+  - **Specific settings**: `uv run voice-to-midi config --audio` (or `--midi`, `--pitch`, `--pedal`)
+- **Other commands**:
+  - **List devices**: `uv run voice-to-midi list`
+  - **Show current config**: `uv run voice-to-midi show`
+  - **Reset config**: `uv run voice-to-midi reset`
 
 - **Select MIDI output**: Choose your desired MIDI output port from the dropdown (on first run or when changing devices)
-- **Adjust settings**: 
+- **Adjust settings**:
   - **Sensitivity**: Controls how sensitive the pitch detection is (0.1-1.0)
   - **Velocity**: Sets the MIDI note velocity (1-127)
 - **Start processing**: Click "Start" to begin voice-to-MIDI conversion
@@ -297,4 +302,4 @@ This project is open source and available under the MIT License.
 - Built with Python and tkinter
 - Uses autocorrelation for pitch detection
 - MIDI handling via mido library
-- Audio processing with PyAudio 
+- Audio processing with PyAudio

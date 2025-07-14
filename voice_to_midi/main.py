@@ -5,8 +5,9 @@ This module provides the main entry point that handles system dependency
 checking and launches the CLI interface.
 """
 
-import sys
 import logging
+import sys
+
 from .cli.commands import cli
 from .utils.helpers import setup_logging
 
@@ -14,39 +15,41 @@ from .utils.helpers import setup_logging
 def check_system_dependencies():
     """
     Check for required system dependencies.
-    
+
     Returns:
         List of missing dependencies
     """
     missing = []
-    
+
     # Check for tkinter
     try:
-        import tkinter as tk
+        import tkinter  # noqa: F401
     except ImportError:
-        missing.append('tkinter')
-    
+        missing.append("tkinter")
+
     # Check for pyaudio
     try:
-        import pyaudio
+        import pyaudio  # noqa: F401
     except ImportError:
-        missing.append('pyaudio')
-    
+        missing.append("pyaudio")
+
     return missing
 
 
 def display_dependency_error(missing_deps):
     """
     Display system dependency installation instructions.
-    
+
     Args:
         missing_deps: List of missing dependencies
     """
     print("\nERROR: The following required Python modules could not be imported:")
     for dep in missing_deps:
         print(f"  - {dep}")
-    
-    print("\nThis usually means you are missing system libraries (PortAudio and/or Tcl/Tk).\n")
+
+    print(
+        "\nThis usually means you are missing system libraries (PortAudio and/or Tcl/Tk).\n"
+    )
     print("To fix this, install the required system libraries for your OS:")
     print("\nmacOS:")
     print("  brew install portaudio tcl-tk")
@@ -65,10 +68,10 @@ def main():
     if missing_deps:
         display_dependency_error(missing_deps)
         sys.exit(1)
-    
+
     # Setup basic logging
     setup_logging()
-    
+
     try:
         # Launch CLI
         cli()

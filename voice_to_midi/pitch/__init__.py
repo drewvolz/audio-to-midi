@@ -17,7 +17,7 @@ Example:
     >>> midi_note = detector.frequency_to_midi(frequency)
 """
 
-from .detector import PitchDetector
 from .analyzer import PitchAnalyzer
+from .detector import PitchDetector
 
 __all__ = ["PitchDetector", "PitchAnalyzer"]
